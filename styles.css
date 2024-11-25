@@ -1,30 +1,29 @@
-/* 全局样式 */
+/*全局样式*/
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
     overflow: hidden;
     background-color: #f0f8ff;
-
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(to right, #f64f59, #c471ed, #12c2e9);
 }
 
-/* 粒子背景 */
-particles-js {
-    position: fixed;
+.background {
+    position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1; /* 确保粒子效果在内容后面 */
+    z-index: 999;
 }
 
 /* 主体容器 */
 .container {
-    background: linear-gradient(145deg, #ffffff, #e6f7ff);
+    background: rgba(255, 255, 255, 0.7); /* 设置背景色为白色，透明度为70% */
     border-radius: 15px;
     padding: 30px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
@@ -120,6 +119,7 @@ button:active {
         opacity: 0;
         transform: translateY(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -130,6 +130,7 @@ button:active {
     from {
         transform: rotate(0deg);
     }
+
     to {
         transform: rotate(360deg);
     }

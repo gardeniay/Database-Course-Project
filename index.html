@@ -1,14 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>交通流预测</title>
     <link rel="stylesheet" href="/static/styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/tsparticles"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/tsparticles"></script>-->
 </head>
+
 <body>
-    <div id="particles-js"></div> <!-- 粒子背景容器 -->
+
+    <div id="particles-js"></div>
+    <canvas class="background"></canvas>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.2/particles.min.js"></script>
+    <script>
+        window.onload = function () {
+            Particles.init({
+                selector: '.background',
+                maxParticles: 50,
+                speed: 1,
+                color: '#8ACAFF',
+                connectParticles: true,
+                minDistance: 140,
+                responsive: [
+                    {
+                        breakpoint: 768,
+                        options: {
+                            maxParticles: 50,
+                            color: '#9400D3',
+                            connectParticles: false
+                        }
+                    }, {
+                        breakpoint: 425,
+                        options: {
+                            maxParticles: 50,
+                            connectParticles: true
+                        }
+                    }, {
+                        breakpoint: 320,
+                        options: {
+                            maxParticles: 0
+                        }
+                    }
+                ]
+            });
+        };
+    </script>
+
+    <style>
+        #particles-js {
+            position: relative;
+            z-index: -999;
+        }
+    </style>
+
     <div class="container">
         <h1>交通流预测</h1>
         <div class="form-group">
@@ -25,78 +71,6 @@
     </div>
 
     <script>
-        window.onload = () => { 
-            // 粒子效果初始化
-            tsParticles.load("particles-js", {
-                particles: {
-                    number: {
-                        value: 50,
-                        density: {
-                            enable: true,
-                            value_area: 800
-                        }
-                    },
-                    color: {
-                        value: "#87ceeb"
-                    },
-                    shape: {
-                        type: "circle",
-                        stroke: {
-                            width: 0,
-                            color: "#000000"
-                        }
-                    },
-                    opacity: {
-                        value: 0.5,
-                        random: false
-                    },
-                    size: {
-                        value: 4,
-                        random: true
-                    },
-                    line_linked: {
-                        enable: true,
-                        distance: 150,
-                        color: "#1e90ff",
-                        opacity: 0.4,
-                        width: 1
-                    },
-                    move: {
-                        enable: true,
-                        speed: 2,
-                        direction: "none",
-                        random: false,
-                        straight: false,
-                        out_mode: "out",
-                        bounce: false
-                    }
-                },
-                interactivity: {
-                    detect_on: "canvas",
-                    events: {
-                        onhover: {
-                            enable: true,
-                            mode: "repulse"
-                        },
-                        onclick: {
-                            enable: true,
-                            mode: "push"
-                        }
-                    },
-                    modes: {
-                        repulse: {
-                            distance: 100,
-                            duration: 0.4
-                        },
-                        push: {
-                            particles_nb: 4
-                        }
-                    }
-                },
-                retina_detect: true
-            });
-        };
-
         // 路线规划逻辑
         document.getElementById('plan-route').addEventListener('click', () => {
             const origin = document.getElementById('origin').value.trim();
@@ -119,24 +93,26 @@
                 },
                 body: JSON.stringify({ origin, destination })
             })
-            .then(response => response.json())
-            .then(data => {
-                spinner.style.display = 'none'; // 隐藏加载动画
-                if (data.success) {
-                    resultDiv.innerHTML = `
+                .then(response => response.json())
+                .then(data => {
+                    spinner.style.display = 'none'; // 隐藏加载动画
+                    if (data.success) {
+                        resultDiv.innerHTML = `
                         <p class="success-message">到达目的地所需时间：${data.duration} 分钟</p>
                         <a href="${data.map_url}" target="_blank" class="map-link">在高德地图中查看</a>
                     `;
-                } else {
-                    resultDiv.innerHTML = `<p class="error-message">${data.message}</p>`;
-                }
-            })
-            .catch(error => {
-                spinner.style.display = 'none'; // 隐藏加载动画
-                resultDiv.innerHTML = `<p class="error-message">请求失败，请稍后重试。</p>`;
-                console.error('Error:', error);
-            });
+                    } else {
+                        resultDiv.innerHTML = `<p class="error-message">${data.message}</p>`;
+                    }
+                })
+                .catch(error => {
+                    spinner.style.display = 'none'; // 隐藏加载动画
+                    resultDiv.innerHTML = `<p class="error-message">请求失败，请稍后重试。</p>`;
+                    console.error('Error:', error);
+                });
         });
     </script>
+
 </body>
+
 </html>
