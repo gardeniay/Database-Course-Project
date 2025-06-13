@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}用户中心 - 知乎简易版{% endblock %}
+
+{% block header_title %}用户中心{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="margin-bottom: 20px;">
+        <a href="{{ url_for('home_page') }}" class="btn">返回首页</a>
+    </div>
+
+    <div class="card">
+        <h2>用户管理</h2>
+        <div class="text-center"
+            style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 30px;">
+            <a href="{{ url_for('turn_add') }}" class="nav-button">
+                <i class="icon-user-plus"></i> 用户注册
+            </a>
+
+            <a href="{{ url_for('turn_delete') }}" class="nav-button">
+                <i class="icon-user-times"></i> 用户注销
+            </a>
+
+            <a href="{{ url_for('turn_change') }}" class="nav-button">
+                <i class="icon-pencil"></i> 用户信息修改
+            </a>
+
+            <a href="{{ url_for('turn_select') }}" class="nav-button">
+                <i class="icon-search"></i> 用户查询
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

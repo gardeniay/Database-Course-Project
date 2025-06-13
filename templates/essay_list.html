@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}文章部分 - 知乎简易版{% endblock %}
+
+{% block header_title %}文章部分{% endblock %}
+
+{% block content %}
+<div class="card">
+	<div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+		<a href="{{ url_for('home_page') }}" class="btn">返回首页</a>
+		<a href="{{ url_for('insert_essay') }}" class="btn btn-success">文章创作</a>
+	</div>
+
+	<div class="card" style="margin-bottom: 20px;">
+		<h2>文章搜索</h2>
+		<div style="display: flex; gap: 20px; flex-wrap: wrap;">
+			<div style="flex: 1; min-width: 300px;">
+				<h3>按标题搜索</h3>
+				<form method="post" action="{{ url_for('find_essay') }}">
+					<div class="form-group">
+						<input type="text" name="文章标题内容" class="form-control" placeholder="输入标题关键词">
+						<small class="text-danger">请输入完整词条</small>
+					</div>
+					<button type="submit" class="btn">查询</button>
+				</form>
+			</div>
+
+			<div style="flex: 1; min-width: 300px;">
+				<h3>按内容搜索</h3>
+				<form method="post" action="{{ url_for('find_essay') }}">
+					<div class="form-group">
+						<input type="text" name="文章内容" class="form-control" placeholder="输入内容关键词">
+						<small class="text-danger">请输入完整词条</small>
+					</div>
+					<button type="submit" class="btn">查询</button>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div class="card">
+		<h2>热门文章</h2>
+		<div class="table-responsive">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>作者ID</th>
+						<th>文章标题</th>
+						<th>文章内容</th>
+						<th>赞同数</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for essay in email %}
+					<tr>
+						<td>{{ essay.文章用户ID }}</td>
+						<td>{{ essay.文章标题 }}</td>
+						<td>{{ essay.文章内容 }}</td>
+						<td>{{ essay.赞同数 }}</td>
+						<td>
+							<form method="post" action="{{ url_for('agree') }}">
+								<input type="hidden" name="文章ID" value="{{ essay.文章ID }}">
+								<button type="submit" class="btn like-btn">
+									<i class="icon-thumbs-up"></i> 赞同
+								</button>
+							</form>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{% endblock %}

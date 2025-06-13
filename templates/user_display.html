@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}用户信息 - 知乎简易版{% endblock %}
+
+{% block header_title %}用户信息{% endblock %}
+
+{% block content %}
+<div class="card">
+	<div style="margin-bottom: 20px;">
+		<a href="{{ url_for('user_center') }}" class="btn">返回用户中心</a>
+	</div>
+
+	<div class="card">
+		<h2>用户信息列表</h2>
+
+		{% if email and email|length > 0 %}
+		<div class="table-responsive">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>用户ID</th>
+						<th>用户名</th>
+						<th>个人简介</th>
+						<th>所在行业</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for user in email %}
+					<tr>
+						<td>{{ user.用户ID }}</td>
+						<td>{{ user.用户名 }}</td>
+						<td>{{ user.个人简介 }}</td>
+						<td>{{ user.所在行业 }}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		{% else %}
+		<div class="alert alert-info">
+			没有找到符合条件的用户信息
+		</div>
+		{% endif %}
+	</div>
+</div>
+{% endblock %}

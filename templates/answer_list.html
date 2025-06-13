@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}问题回答 - 知乎简易版{% endblock %}
+
+{% block header_title %}问题回答{% endblock %}
+
+{% block content %}
+<div class="card">
+	<div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+		<a href="{{ url_for('back_question') }}" class="btn">返回问题列表</a>
+		<a href="{{ url_for('insert_answer') }}" class="btn btn-success">写回答</a>
+	</div>
+
+	<div class="card">
+		<h2>所有回答</h2>
+		<div class="table-responsive">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>问题ID</th>
+						<th>用户ID</th>
+						<th>回答文本</th>
+						<th>回答时间</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for answer in email %}
+					<tr>
+						<td>{{ answer.问题ID }}</td>
+						<td>{{ answer.用户ID }}</td>
+						<td>{{ answer.回答文本 }}</td>
+						<td>{{ answer.回答时间 }}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{% endblock %}

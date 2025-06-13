@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}首页 - 知乎简易版{% endblock %}
+
+{% block header %}
+<div class="header">
+    <h1>知乎简易版</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="text-center" style="margin-bottom: 30px;">
+        <h2>欢迎使用知乎简易版</h2>
+        <p>这是一个基于Flask的知识分享平台</p>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;">
+        <a href="{{ url_for('question') }}" class="nav-button">
+            <i class="icon-question"></i> 问题界面
+        </a>
+
+        <a href="{{ url_for('essay') }}" class="nav-button">
+            <i class="icon-book"></i> 文章阅读
+        </a>
+
+        <a href="{{ url_for('ebook') }}" class="nav-button">
+            <i class="icon-shopping-cart"></i> 电子书商城
+        </a>
+
+        <a href="{{ url_for('user_center') }}" class="nav-button">
+            <i class="icon-user"></i> 用户中心
+        </a>
+
+        <a href="{{ url_for('create') }}" class="nav-button">
+            <i class="icon-pencil"></i> 创作中心
+        </a>
+    </div>
+</div>
+{% endblock %}

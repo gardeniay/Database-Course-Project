@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}用户注册 - 知乎简易版{% endblock %}
+
+{% block header_title %}用户注册{% endblock %}
+
+{% block content %}
+<div class="card">
+      <div style="margin-bottom: 20px;">
+            <a href="{{ url_for('user_center') }}" class="btn">返回用户中心</a>
+      </div>
+
+      <div class="card">
+            <h2>用户注册</h2>
+            <div class="alert alert-info">请填写所有信息后提交，否则将返回首页</div>
+
+            <form method="post" action="{{ url_for('add') }}">
+                  <div class="form-group">
+                        <label for="user_id">用户ID</label>
+                        <input type="number" id="user_id" name="用户ID" class="form-control" placeholder="请输入用户ID"
+                              required>
+                  </div>
+
+                  <div class="form-group">
+                        <label for="username">用户名</label>
+                        <input type="text" id="username" name="用户名" class="form-control" placeholder="请输入用户名" required>
+                  </div>
+
+                  <div class="form-group">
+                        <label for="intro">个人简介</label>
+                        <input type="text" id="intro" name="个人简介" class="form-control" placeholder="请输入个人简介" required>
+                  </div>
+
+                  <div class="form-group">
+                        <label for="industry">所在行业</label>
+                        <input type="text" id="industry" name="所在行业" class="form-control" placeholder="请输入所在行业"
+                              required>
+                  </div>
+
+                  <div class="form-group">
+                        <button type="submit" class="btn btn-success">提交</button>
+                  </div>
+            </form>
+      </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+      document.addEventListener('DOMContentLoaded', function () {
+            // 表单提交前验证
+            document.querySelector('form').addEventListener('submit', function (e) {
+                  const inputs = this.querySelectorAll('input[type="text"], input[type="number"]');
+                  let isEmpty = false;
+
+                  inputs.forEach(input => {
+                        if (!input.value.trim()) {
+                              isEmpty = true;
+                              input.classList.add('is-invalid');
+                        } else {
+                              input.classList.remove('is-invalid');
+                        }
+                  });
+
+                  if (isEmpty) {
+                        e.preventDefault();
+                        showAlert('请填写所有必填字段', 'error');
+                  }
+            });
+      });
+</script>
+{% endblock %}

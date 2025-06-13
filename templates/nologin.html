@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}登录失败 - 知乎简易版{% endblock %}
+
+{% block header %}
+<div class="header">
+    <h1>知乎简易版 - 登录失败</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-header">
+        <h2>登录错误</h2>
+        <div class="alert alert-danger">登录失败，请重新登录或注册新账号</div>
+    </div>
+
+    <div class="login-form">
+        <form method="post" action="{{ url_for('login') }}">
+            <div class="form-group">
+                <label for="user_id">用户ID</label>
+                <input class="form-control" type="number" id="user_id" name="用户ID" placeholder="请输入您的用户ID" required>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-success" style="width: 100%;">登录</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="login-footer">
+        <p>还没有账号？<a href="{{ url_for('user_add_page') }}">立即注册</a></p>
+    </div>
+</div>
+{% endblock %}
