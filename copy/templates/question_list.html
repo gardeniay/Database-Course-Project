@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}问答部分 - 知乎简易版{% endblock %}
+
+{% block header_title %}问答部分{% endblock %}
+
+{% block content %}
+<div class="card">
+	<div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+		<a href="{{ url_for('home_page') }}" class="btn">返回首页</a>
+		<a href="{{ url_for('insert_question') }}" class="btn btn-success">发布问题</a>
+	</div>
+
+	<div class="card" style="margin-bottom: 30px;">
+		<h2>问题搜索</h2>
+		<form method="post" action="{{ url_for('read_answer') }}">
+			<div class="form-group">
+				<input type="text" name="问题内容" class="form-control" placeholder="请输入关键词">
+				<small class="text-danger">请输入完整词条</small>
+			</div>
+			<button type="submit" class="btn">查询</button>
+		</form>
+	</div>
+
+	<div class="card">
+		<h2>热门问题</h2>
+		<div class="table-responsive">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>提问用户ID</th>
+						<th>发布日期</th>
+						<th>回答数</th>
+						<th>问题内容</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for question in email %}
+					<tr>
+						<td>{{ question.提问用户ID }}</td>
+						<td>{{ question.发布日期 }}</td>
+						<td>{{ question.回答数 }}</td>
+						<td>{{ question.问题内容 }}</td>
+						<td>
+							<form method="post" action="{{ url_for('read_answer') }}">
+								<input type="hidden" name="问题ID" value="{{ question.问题ID }}">
+								<button type="submit" class="btn">查看回答</button>
+							</form>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{% endblock %}

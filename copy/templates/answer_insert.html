@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}写回答 - 知乎简易版{% endblock %}
+
+{% block header_title %}写回答{% endblock %}
+
+{% block content %}
+<div class="card">
+      <div style="margin-bottom: 20px;">
+            <a href="{{ url_for('back_question') }}" class="btn">返回问题列表</a>
+      </div>
+
+      <div class="card">
+            <h2>提交回答</h2>
+            <div class="alert alert-info">请输入完整的回答内容后提交</div>
+
+            <form method="post" action="{{ url_for('answer_add') }}">
+                  <div class="form-group">
+                        <label for="answer_text">回答内容</label>
+                        <textarea id="answer_text" name="回答文本" class="form-control" rows="8" placeholder="请在此输入您的回答..."
+                              required></textarea>
+                  </div>
+
+                  <div class="form-group">
+                        <button type="submit" class="btn btn-success">提交回答</button>
+                  </div>
+            </form>
+      </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+      document.addEventListener('DOMContentLoaded', function () {
+            // 表单提交前验证
+            document.querySelector('form').addEventListener('submit', function (e) {
+                  const textarea = this.querySelector('textarea');
+                  if (!textarea.value.trim()) {
+                        e.preventDefault();
+                        showAlert('请填写回答内容', 'error');
+                        textarea.focus();
+                  }
+            });
+      });
+</script>
+{% endblock %}

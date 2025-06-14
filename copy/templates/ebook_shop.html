@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}电子书平台 - 知乎简易版{% endblock %}
+
+{% block header_title %}电子书平台{% endblock %}
+
+{% block content %}
+<div class="card">
+	<div style="margin-bottom: 20px;">
+		<a href="{{ url_for('home_page') }}" class="btn">返回首页</a>
+	</div>
+
+	<div class="card">
+		<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+			<h2>限时免费部分</h2>
+			<span class="alert alert-danger"
+				style="display: inline-block; padding: 5px 10px; margin: 0;">收费流程正在完善中</span>
+		</div>
+
+		<div class="table-responsive">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>作者名称</th>
+						<th>内容简介</th>
+						<th>书名</th>
+						<th>原价格</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for book in email %}
+					<tr>
+						<td>{{ book.作者名称 }}</td>
+						<td>{{ book.内容简介 }}</td>
+						<td>{{ book.书籍名称 }}</td>
+						<td>¥{{ book.价格 }}</td>
+						<td>
+							<a href="{{ book.链接 }}" target="_blank" class="btn btn-success">阅读全文</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{% endblock %}

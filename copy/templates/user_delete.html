@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}用户注销 - 知乎简易版{% endblock %}
+
+{% block header_title %}用户注销{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="margin-bottom: 20px;">
+        <a href="{{ url_for('user_center') }}" class="btn">返回用户中心</a>
+    </div>
+
+    <div class="card">
+        <h2>用户注销</h2>
+        <div class="alert alert-danger">注销后的用户将不可找回，请谨慎注销</div>
+
+        <form method="post" action="{{ url_for('delete') }}">
+            <div class="form-group">
+                <label for="user_id">要注销的用户ID</label>
+                <input type="number" id="user_id" name="用户ID" class="form-control" placeholder="请输入用户ID" required>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-danger"
+                    onclick="return confirm('确定要注销此账户吗？此操作不可撤销！')">确认注销</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

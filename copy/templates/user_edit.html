@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}用户信息修改 - 知乎简易版{% endblock %}
+
+{% block header_title %}用户信息修改{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="margin-bottom: 20px;">
+        <a href="{{ url_for('user_center') }}" class="btn">返回用户中心</a>
+    </div>
+
+    <div class="card">
+        <h2>修改用户信息</h2>
+        <p class="text-muted">只填写需要修改的字段，其他字段保持默认值即可</p>
+
+        <form method="post" action="{{ url_for('change') }}">
+            <div class="form-group">
+                <label for="user_id">用户ID <span class="text-danger">*</span></label>
+                <input type="number" id="user_id" name="用户ID" class="form-control" placeholder="请输入用户ID" required>
+                <small class="text-muted">此字段必填，用于标识要修改的账户</small>
+            </div>
+
+            <div class="form-group">
+                <label for="username">新用户名</label>
+                <input type="text" id="username" name="用户名" class="form-control" placeholder="用户名" value="用户名">
+            </div>
+
+            <div class="form-group">
+                <label for="intro">新个人简介</label>
+                <input type="text" id="intro" name="个人简介" class="form-control" placeholder="个人简介" value="个人简介">
+            </div>
+
+            <div class="form-group">
+                <label for="industry">新所在行业</label>
+                <input type="text" id="industry" name="所在行业" class="form-control" placeholder="所在行业" value="所在行业">
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">提交修改</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

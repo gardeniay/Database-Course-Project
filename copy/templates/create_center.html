@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}创作中心 - 知乎简易版{% endblock %}
+
+{% block header_title %}创作中心{% endblock %}
+
+{% block content %}
+<div class="card">
+	<div style="margin-bottom: 20px;">
+		<a href="{{ url_for('home_page') }}" class="btn">返回首页</a>
+	</div>
+
+	<!-- 问题部分 -->
+	<div class="card" style="margin-bottom: 30px;">
+		<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+			<h2>我的问题</h2>
+			<a href="{{ url_for('insert_question') }}" class="btn btn-success">发布问题</a>
+		</div>
+
+		<div class="table-responsive">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>提问用户ID</th>
+						<th>发布日期</th>
+						<th>回答数</th>
+						<th>问题内容</th>
+						<th colspan="2">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for question in questions %}
+					<tr>
+						<td>{{ question.提问用户ID }}</td>
+						<td>{{ question.发布日期 }}</td>
+						<td>{{ question.回答数 }}</td>
+						<td>{{ question.问题内容 }}</td>
+						<td>
+							<form method="post" action="{{ url_for('read_answer') }}">
+								<input type="hidden" name="问题ID" value="{{ question.问题ID }}">
+								<button type="submit" class="btn">查看回答</button>
+							</form>
+						</td>
+						<td>
+							<form method="post" action="{{ url_for('delete_question') }}">
+								<input type="hidden" name="问题ID" value="{{ question.问题ID }}">
+								<button type="submit" class="btn btn-danger">删除</button>
+							</form>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<!-- 回答部分 -->
+	<div class="card" style="margin-bottom: 30px;">
+		<h2>我的回答</h2>
+		<div class="table-responsive">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>问题ID</th>
+						<th>用户ID</th>
+						<th>回答文本</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for answer in answers %}
+					<tr>
+						<td>{{ answer.问题ID }}</td>
+						<td>{{ answer.用户ID }}</td>
+						<td>{{ answer.回答文本 }}</td>
+						<td>
+							<form method="post" action="{{ url_for('delete_answer') }}">
+								<input type="hidden" name="回答ID" value="{{ answer.回答ID }}">
+								<button type="submit" class="btn btn-danger">删除</button>
+							</form>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<!-- 文章部分 -->
+	<div class="card">
+		<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+			<h2>我的文章</h2>
+			<a href="{{ url_for('insert_essay') }}" class="btn btn-success">文章创作</a>
+		</div>
+
+		<div class="table-responsive">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>作者ID</th>
+						<th>文章标题</th>
+						<th>文章内容</th>
+						<th>赞同数</th>
+						<th colspan="2">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for essay in essays %}
+					<tr>
+						<td>{{ essay.文章用户ID }}</td>
+						<td>{{ essay.文章标题 }}</td>
+						<td>{{ essay.文章内容 }}</td>
+						<td>{{ essay.赞同数 }}</td>
+						<td>
+							<form method="post" action="{{ url_for('center_agree') }}">
+								<input type="hidden" name="文章ID" value="{{ essay.文章ID }}">
+								<button type="submit" class="btn like-btn">
+									<i class="icon-thumbs-up"></i> 赞同
+								</button>
+							</form>
+						</td>
+						<td>
+							<form method="post" action="{{ url_for('delete_essay') }}">
+								<input type="hidden" name="文章ID" value="{{ essay.文章ID }}">
+								<button type="submit" class="btn btn-danger">删除</button>
+							</form>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{% endblock %}
