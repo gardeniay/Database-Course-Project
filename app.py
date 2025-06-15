@@ -4,6 +4,7 @@ import pymysql  # MySQL数据库连接模块
 import datetime  # 日期时间处理模块
 import os  # 操作系统相关模块
 from functools import wraps  # 装饰器工具模块
+from dbutils.pooled_db import PooledDB  # 数据库连接池
 
 # 创建Flask应用实例
 app = Flask(__name__)
@@ -20,39 +21,54 @@ db_name = os.getenv('DB_NAME', 'zhihu')  # 数据库名称
 db_user = os.getenv('DB_USER', 'root')  # 数据库用户名
 db_password = os.getenv('DB_PASSWORD', '928520zjf.')  # 数据库密码
 
+# 创建数据库连接池
+pool = PooledDB(
+    creator=pymysql,
+    maxconnections=6,  # 连接池最大连接数
+    mincached=2,       # 初始化时创建的连接数
+    maxcached=5,       # 连接池最大空闲连接数
+    blocking=True,     # 连接池中如果没有可用连接后是否阻塞等待
+    host=db_host,
+    port=db_port,
+    user=db_user,
+    password=db_password,
+    database=db_name,
+    charset='utf8mb4',
+    cursorclass=pymysql.cursors.DictCursor
+)
+
 def get_db():
-    """创建并返回一个到MySQL数据库的连接
+    """从连接池获取数据库连接
     
     Returns:
         pymysql.connections.Connection: 返回一个配置好的数据库连接对象
     """
-    conn = pymysql.connect(
-        host=db_host,
-        port=db_port,
-        user=db_user,
-        password=db_password,
-        database=db_name,
-        charset='utf8mb4',
-        cursorclass=pymysql.cursors.DictCursor  # 返回字典形式的结果
-    )
-    return conn
+    return pool.connection()
 
-def query_db(query, args=(), one=False):
+def query_db(query, args=(), one=False, page=None, page_size=None):
     """执行SQL查询并返回结果
     
     Args:
         query (str): SQL查询语句
         args (tuple): 查询参数
         one (bool): 是否只返回第一条记录
+        page (int): 页码，从1开始
+        page_size (int): 每页记录数
         
     Returns:
         list|dict: 查询结果，如果one=True则返回单条记录，否则返回记录列表
     """
     conn = get_db()
     cursor = conn.cursor()
+    
+    # 添加分页
+    if page is not None and page_size is not None:
+        offset = (page - 1) * page_size
+        query += f" LIMIT {page_size} OFFSET {offset}"
+    
     cursor.execute(query, args)
-    rv = cursor.fetchall()  # 获取所有结果
-    conn.commit()
+    rv = cursor.fetchall()
+    
     cursor.close()
     conn.close()
     return (rv[0] if rv else None) if one else rv
@@ -227,8 +243,23 @@ def question():
     Returns:
         str: 返回问题列表页面的HTML内容，包含按回答数降序排列的问题列表
     """
-    questions = query_db('SELECT * FROM question ORDER BY 回答数 DESC')
-    return render_template('question_list.html', email=questions)
+    page = request.args.get('page', 1, type=int)
+    page_size = 10
+    
+    # 只选择需要的字段
+    questions = query_db(
+        'SELECT 问题ID, 提问用户ID, 问题内容, 发布日期, 回答数 FROM question ORDER BY 回答数 DESC',
+        page=page,
+        page_size=page_size
+    )
+    
+    total = query_db('SELECT COUNT(*) as count FROM question', one=True)['count']
+    total_pages = (total + page_size - 1) // page_size
+    
+    return render_template('question_list.html', 
+                         email=questions,
+                         current_page=page,
+                         total_pages=total_pages)
 
 @app.route('/question_check')
 def question_check():
@@ -373,8 +404,24 @@ def essay():
     Returns:
         str: 返回文章列表页面的HTML内容，包含按赞同数降序排列的文章列表
     """
-    essays = query_db('SELECT * FROM essay ORDER BY 赞同数 DESC')
-    return render_template('essay_list.html', email=essays)
+    page = request.args.get('page', 1, type=int)
+    page_size = 10  # 每页显示10条记录
+    
+    # 只选择需要的字段
+    essays = query_db(
+        'SELECT 文章ID, 文章用户ID, 文章标题, 文章内容, 赞同数 FROM essay ORDER BY 赞同数 DESC',
+        page=page,
+        page_size=page_size
+    )
+    
+    # 获取总记录数
+    total = query_db('SELECT COUNT(*) as count FROM essay', one=True)['count']
+    total_pages = (total + page_size - 1) // page_size
+    
+    return render_template('essay_list.html', 
+                         email=essays, 
+                         current_page=page,
+                         total_pages=total_pages)
 
 @app.route('/passage')
 def passage():
@@ -483,9 +530,20 @@ def create():
         str: 返回创作中心页面的HTML内容，根据用户权限显示不同内容
     """
     user_id = session.get('user_id')
-    questions = query_db('SELECT * FROM question WHERE 用户ID = %s', [user_id])
-    answers = query_db('SELECT * FROM answer WHERE 用户ID = %s', [user_id])
-    essays = query_db('SELECT * FROM essay WHERE 用户ID = %s', [user_id])
+    
+    # 只选择需要的字段
+    questions = query_db(
+        'SELECT 问题ID, 提问用户ID, 问题内容, 发布日期, 回答数 FROM question WHERE 提问用户ID = %s',
+        [user_id]
+    )
+    answers = query_db(
+        'SELECT 回答ID, 问题ID, 用户ID, 回答文本 FROM answer WHERE 用户ID = %s',
+        [user_id]
+    )
+    essays = query_db(
+        'SELECT 文章ID, 文章用户ID, 文章标题, 文章内容, 赞同数 FROM essay WHERE 文章用户ID = %s',
+        [user_id]
+    )
     
     return render_template('create_center.html', questions=questions, answers=answers, essays=essays)
 

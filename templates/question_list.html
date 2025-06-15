@@ -54,5 +54,20 @@
 			</table>
 		</div>
 	</div>
+
+	<!-- 分页导航 -->
+	{% if total_pages > 1 %}
+	<div class="pagination" style="margin-top: 20px; text-align: center;">
+		{% if current_page > 1 %}
+		<a href="{{ url_for('question', page=current_page-1) }}" class="btn">&laquo; 上一页</a>
+		{% endif %}
+
+		<span style="margin: 0 10px;">第 {{ current_page }} 页，共 {{ total_pages }} 页</span>
+
+		{% if current_page < total_pages %} <a href="{{ url_for('question', page=current_page+1) }}" class="btn">下一页
+			&raquo;</a>
+			{% endif %}
+	</div>
+	{% endif %}
 </div>
 {% endblock %}

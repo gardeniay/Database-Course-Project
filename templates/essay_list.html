@@ -61,8 +61,9 @@
 						<td>
 							<form method="post" action="{{ url_for('agree') }}">
 								<input type="hidden" name="文章ID" value="{{ essay.文章ID }}">
-								<button type="submit" class="btn like-btn">
-									<i class="icon-thumbs-up"></i> 赞同
+								<button type="submit" class="btn like-btn"
+									style="background-color: #e6f3ff; color: #007bff; border: 1px solid #007bff;">
+									<i class="icon-thumbs-up" style="color: #007bff;"></i> 赞同
 								</button>
 							</form>
 						</td>
@@ -73,4 +74,19 @@
 		</div>
 	</div>
 </div>
+
+<!-- 分页导航 -->
+{% if total_pages > 1 %}
+<div class="pagination" style="margin-top: 20px; text-align: center;">
+	{% if current_page > 1 %}
+	<a href="{{ url_for('essay', page=current_page-1) }}" class="btn">&laquo; 上一页</a>
+	{% endif %}
+
+	<span style="margin: 0 10px;">第 {{ current_page }} 页，共 {{ total_pages }} 页</span>
+
+	{% if current_page < total_pages %} <a href="{{ url_for('essay', page=current_page+1) }}" class="btn">下一页
+		&raquo;</a>
+		{% endif %}
+</div>
+{% endif %}
 {% endblock %}
